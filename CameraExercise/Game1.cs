@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using CameraNS;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Sprites;
 
 namespace CameraExercise
 {
@@ -11,6 +13,10 @@ namespace CameraExercise
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SimpleSprite sprite;
+        Texture2D txBackground;       
+        Texture2D txChaser;
+        Camera cam;
 
         public Game1()
         {
@@ -39,7 +45,10 @@ namespace CameraExercise
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            txBackground = Content.Load<Texture2D>("background");
+            txChaser = Content.Load<Texture2D>("chaser");
+            sprite = new SimpleSprite(txChaser, GraphicsDevice.Viewport.Bounds.Center.ToVector2());
+            cam = new Camera(Vector2.Zero,txBackground.Bounds.Size.ToVector2());
             // TODO: use this.Content to load your game content here
         }
 
@@ -74,6 +83,8 @@ namespace CameraExercise
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            
 
             // TODO: Add your drawing code here
 
