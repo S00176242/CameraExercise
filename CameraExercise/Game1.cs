@@ -17,6 +17,9 @@ namespace CameraExercise
         Texture2D txBackground;       
         Texture2D txChaser;
         Camera cam;
+        Vector2 WorldBound = new Vector2(4000, 3000);
+        Rectangle WorldRectangle;
+        float speed = 5;
 
         public Game1()
         {
@@ -49,6 +52,9 @@ namespace CameraExercise
             txChaser = Content.Load<Texture2D>("chaser");
             sprite = new SimpleSprite(txChaser, GraphicsDevice.Viewport.Bounds.Center.ToVector2());
             cam = new Camera(Vector2.Zero,txBackground.Bounds.Size.ToVector2());
+            cam = new Camera(Vector2.Zero, WorldBound);
+            WorldRectangle = new Rectangle(Point.Zero, WorldBound.ToPoint());
+
             // TODO: use this.Content to load your game content here
         }
 
@@ -71,6 +77,15 @@ namespace CameraExercise
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            if (Keyboard.GetState().IsKeyDown(Keys.Right))
+                cam.move(new Vector2(1, 0) * speed, GraphicsDevice.Viewport);
+            if (Keyboard.GetState().IsKeyDown(Keys.Left))
+                cam.move(new Vector2(-1, 0) * speed, GraphicsDevice.Viewport);
+            if (Keyboard.GetState().IsKeyDown(Keys.Up))
+                cam.move(new Vector2(0, -1) * speed, GraphicsDevice.Viewport);
+            if (Keyboard.GetState().IsKeyDown(Keys.Down))
+                cam.move(new Vector2(0, 1) * speed, GraphicsDevice.Viewport);
+
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -83,8 +98,16 @@ namespace CameraExercise
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            spriteBatch.Begin(SpriteSortMode.BackToFront,
+                               BlendState.AlphaBlend,
+                               null, null, null, null, cam.CurrentCameraTranslation);
+            spriteBatch.Draw(txBackground, WorldRectangle,Color.White);
+            sprite.draw(spriteBatch);
+            spriteBatch.Draw(txChaser,Vector2.Zero,Color.White);
+            spriteBatch.End();
             
+
+
 
             // TODO: Add your drawing code here
 
